@@ -3,13 +3,13 @@
 #' In general it is: Sample; (Replicate); (Dilution); Antigen1/Feature1; ...;
 #' FeatureN
 #' @param file file path
-#' @param verbose verbose output?
 #' @return array, dimensions = samples x features x dilution x replicates
 #' @noRd
-.readFlexmapCsv <- function(file, verbose=interactive()) {
+.readFlexmapCsv <- function(file) {
   header <- scan(file, what=character(), sep=";", nlines=1L, quiet=TRUE)
   content <- scan(file, what=c(character(1L),
                                replicate(length(header) - 1L, double())),
+                  skip=as.numeric(is.character(file)),
                   sep=";", quiet=TRUE, multi.line=FALSE)
 
   dims <- c("sample", "replicate", "dilution")
@@ -44,7 +44,7 @@
   }
   dn <- length(dl)
 
-  ## find correct order
+  ## find correct order (starting at the deepest level)
   o <- order(ra, da, sa)
   o <- rep(0L:(fn - 1L), each=length(o)) * length(o) + o
 

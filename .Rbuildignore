@@ -1,0 +1,13 @@
+^README\.md$
+^\.git$
+^\.gitignore$
+^\.travis.yml$
+^sandbox$
+^vignettes/figure$
+^vignettes/*.pdf$
+.*.aux$
+.*.bbl$
+.*.blg$
+.*.log$
+.*.out$
+.*.tex$

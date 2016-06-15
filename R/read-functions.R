@@ -13,7 +13,8 @@
                   sep=";", quiet=TRUE, multi.line=FALSE)
 
   dims <- c("sample", "replicate", "dilution")
-  i <- setNames(match(dims, tolower(header), nomatch=0L), dims)
+  i <- match(dims, tolower(header), nomatch=0L)
+  names(i) <- dims
 
   ## samples
   sa <- content[[i["sample"]]]

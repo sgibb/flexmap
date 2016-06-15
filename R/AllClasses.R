@@ -1,4 +1,3 @@
-#' @import Biobase
 .FlexmapSet <- setClass("FlexmapSet",
                         slots=list(exprs="array"),
                         contains="eSet",

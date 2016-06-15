@@ -24,16 +24,6 @@
   fl <- unlist(header[-i])
   fn <- length(fl)
 
-  ## replicate
-  if (i["replicate"]) {
-    ra <- unlist(content[i["replicate"]])
-    rl <- sort.int(unique(ra))
-  } else {
-    ra <- rep.int("1", length(sa))
-    rl <- "1"
-  }
-  rn <- length(rl)
-
   ## dilutions
   if (i["dilution"]) {
     da <- unlist(content[i["dilution"]])
@@ -43,6 +33,18 @@
     dl <- "1"
   }
   dn <- length(dl)
+
+  ## replicate
+  if (i["dilution"]) {
+    rr <- sort.int(paste0(content[[i["sample"]]], content[[i["dilution"]]]),
+                   index.return=TRUE)
+  } else {
+    rr <- sort.int(content[[i["sample"]]], index.return=TRUE)
+  }
+  rrl <- rle(rr$x)$lengths
+  ra <- sequence(rrl)[rr$ix]
+  rl <- 1L:max(rrl)
+  rn <- length(rl)
 
   ## find correct order (starting at the deepest level)
   o <- order(ra, da, sa)

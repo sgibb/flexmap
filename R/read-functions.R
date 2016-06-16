@@ -12,9 +12,8 @@
                   skip=as.numeric(is.character(file)),
                   sep=";", quiet=TRUE, multi.line=FALSE)
 
-  dims <- c("sample", "replicate", "dilution")
-  i <- match(dims, tolower(header), nomatch=0L)
-  names(i) <- dims
+  i <- match(.dimnames(), tolower(header), nomatch=0L)
+  names(i) <- .dimnames()
 
   ## samples
   sa <- content[[i["sample"]]]

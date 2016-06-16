@@ -5,9 +5,7 @@
 #' @noRd
 .annotatedDataFrameFromArray <- function(object, dimname, ...) {
 
-  choices <- c("sample", "feature", "dilution", "replicate")
-  dimname <- match.arg(dimname, choices)
-  i <- which(dimname == choices)
+  i <- .dim[match.arg(dimname, .dimnames())]
 
   if (!is.null(object) && length(i)) {
     n <- dim(object)[i]

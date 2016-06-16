@@ -1,8 +1,5 @@
 context("utils-functions")
 
-test_that(".annotatedDataFrameFromArray throws errors", {
-})
-
 test_that(".annotatedDataFrameFromArray", {
   a <- array(NA, dim=c(5, 4, 3, 2),
              dimnames=list(paste0("A", 1:5), paste0("B", 1:4),

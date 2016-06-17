@@ -1,6 +1,10 @@
 setGeneric("dilutionData", function(object) standardGeneric("dilutionData"))
+setGeneric("dilutionData<-", function(object, value)
+           standardGeneric("dilutionData<-"))
 setGeneric("dilutionNames", function(object) standardGeneric("dilutionNames"))
 setGeneric("replicateData", function(object) standardGeneric("replicateData"))
+setGeneric("replicateData<-", function(object, value)
+           standardGeneric("replicateData<-"))
 setGeneric("replicateNames", function(object) standardGeneric("replicateNames"))
 
 setGeneric("FlexmapSet",

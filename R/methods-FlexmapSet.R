@@ -117,6 +117,14 @@ setMethod(FlexmapSet, "array",
 
 setMethod("dilutionData", "FlexmapSet", function(object) object@dilutionData)
 
+setReplaceMethod("dilutionData",
+                 signature=signature(object="FlexmapSet",
+                                     value="AnnotatedDataFrame"),
+                 function(object, value) {
+  object@dilutionData <- value
+  object
+})
+
 setMethod("dilutionNames", "FlexmapSet", function(object) {
   if (dim(object)[.dim["dilution"]]) {
     dimnames(object)[[.dim["dilution"]]]
@@ -160,6 +168,14 @@ setReplaceMethod("exprs", signature(object="FlexmapSet", value="array"),
 })
 
 setMethod("replicateData", "FlexmapSet", function(object) object@replicateData)
+
+setReplaceMethod("replicateData",
+                 signature=signature(object="FlexmapSet",
+                                     value="AnnotatedDataFrame"),
+                 function(object, value) {
+  object@replicateData <- value
+  object
+})
 
 setMethod("replicateNames", "FlexmapSet", function(object) {
   if (dim(object)[.dim["replicate"]]) {

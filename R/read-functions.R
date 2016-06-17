@@ -3,7 +3,8 @@
 #' In general it is: Sample; (Replicate); (Dilution); Antigen1/Feature1; ...;
 #' FeatureN
 #' @param file file path
-#' @return array, dimensions = samples x features x dilution x replicates
+#' @return array, dimensions = features x samples x dilution x replicates
+#' (because eSet requires features x samples instead of samples x features)
 #' @noRd
 .readFlexmapCsv <- function(file) {
   header <- scan(file, what=character(), sep=";", nlines=1L, quiet=TRUE)
@@ -52,5 +53,5 @@
 
   aperm(array(unlist(content[-i])[o],
               dim=c(sn, dn, rn, fn), dimnames=list(sl, dl, rl, fl)),
-        perm=c(1L, 4L, 2L, 3L))
+        perm=c(4L, 1L, 2L, 3L))
 }

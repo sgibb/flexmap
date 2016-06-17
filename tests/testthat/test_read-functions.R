@@ -24,17 +24,17 @@ C;2;1000;2600;2700;2800;2900;3000
 
   a <- flexmap:::.readFlexmapCsv(textConnection(csv))
 
-  expect_equal(dim(a), c(3, 5, 3, 2))
+  expect_equal(dim(a), c(5, 3, 3, 2))
   expect_equal(dimnames(a),
-               list(LETTERS[1:3], paste0("F", 1:5),
+               list(paste0("F", 1:5), LETTERS[1:3],
                as.character(10^(1:3)), as.character(1:2)))
-  expect_equal(as.vector(a[1,,1,1]), 1:5)
-  expect_equal(as.vector(a[1,,1,2]), 6:10)
-  expect_equal(as.vector(a[1,,2,1]), c(10, 20, 30, 40, 50))
-  expect_equal(as.vector(a[2,,1,1]), 11:15)
-  expect_equal(as.vector(a[2,,1,2]), 16:20)
-  expect_equal(as.vector(a[3,,1,1]), 21:25)
-  expect_equal(as.vector(a[3,,1,2]), 26:30)
+  expect_equal(as.vector(a[,1,1,1]), 1:5)
+  expect_equal(as.vector(a[,1,1,2]), 6:10)
+  expect_equal(as.vector(a[,1,2,1]), c(10, 20, 30, 40, 50))
+  expect_equal(as.vector(a[,2,1,1]), 11:15)
+  expect_equal(as.vector(a[,2,1,2]), 16:20)
+  expect_equal(as.vector(a[,3,1,1]), 21:25)
+  expect_equal(as.vector(a[,3,1,2]), 26:30)
 })
 
 test_that(".readFlexmapCsv keeps the order of features", {
@@ -61,20 +61,18 @@ C;2;1000;2600;2700;2800;2900;3000
 
   a <- flexmap:::.readFlexmapCsv(textConnection(csv))
 
-  expect_equal(dim(a), c(3, 5, 3, 2))
+  expect_equal(dim(a), c(5, 3, 3, 2))
   expect_equal(dimnames(a),
-               list(LETTERS[1:3], c("F3", "F2", "F1", "F4", "F5"),
+               list(c("F3", "F2", "F1", "F4", "F5"), LETTERS[1:3],
                as.character(10^(1:3)), as.character(1:2)))
-  expect_equal(as.vector(a[1,,1,1]), 1:5)
-  expect_equal(as.vector(a[1,,1,2]), 6:10)
-  expect_equal(as.vector(a[1,,2,1]), c(10, 20, 30, 40, 50))
-  expect_equal(as.vector(a[2,,1,1]), 11:15)
-  expect_equal(as.vector(a[2,,1,2]), 16:20)
-  expect_equal(as.vector(a[3,,1,1]), 21:25)
-  expect_equal(as.vector(a[3,,1,2]), 26:30)
+  expect_equal(as.vector(a[,1,1,1]), 1:5)
+  expect_equal(as.vector(a[,1,1,2]), 6:10)
+  expect_equal(as.vector(a[,1,2,1]), c(10, 20, 30, 40, 50))
+  expect_equal(as.vector(a[,2,1,1]), 11:15)
+  expect_equal(as.vector(a[,2,1,2]), 16:20)
+  expect_equal(as.vector(a[,3,1,1]), 21:25)
+  expect_equal(as.vector(a[,3,1,2]), 26:30)
 })
-
-
 
 test_that(".readFlexmapCsv works without replicates", {
 csv <- "Sample;Dilution;F1;F2;F3;F4;F5
@@ -91,14 +89,14 @@ C;1000;2100;2200;2300;2400;2500
 
   a <- flexmap:::.readFlexmapCsv(textConnection(csv))
 
-  expect_equal(dim(a), c(3, 5, 3, 1))
+  expect_equal(dim(a), c(5, 3, 3, 1))
   expect_equal(dimnames(a),
-               list(LETTERS[1:3], paste0("F", 1:5),
+               list(paste0("F", 1:5), LETTERS[1:3],
                as.character(10^(1:3)), as.character(1)))
-  expect_equal(as.vector(a[1,,1,1]), 1:5)
-  expect_equal(as.vector(a[1,,2,1]), c(10, 20, 30, 40, 50))
-  expect_equal(as.vector(a[2,,1,1]), 11:15)
-  expect_equal(as.vector(a[3,,1,1]), 21:25)
+  expect_equal(as.vector(a[,1,1,1]), 1:5)
+  expect_equal(as.vector(a[,1,2,1]), c(10, 20, 30, 40, 50))
+  expect_equal(as.vector(a[,2,1,1]), 11:15)
+  expect_equal(as.vector(a[,3,1,1]), 21:25)
 })
 
 test_that(".readFlexmapCsv works without dilutions", {
@@ -113,16 +111,16 @@ C;2;26;27;28;29;30
 
   a <- flexmap:::.readFlexmapCsv(textConnection(csv))
 
-  expect_equal(dim(a), c(3, 5, 1, 2))
+  expect_equal(dim(a), c(5, 3, 1, 2))
   expect_equal(dimnames(a),
-               list(LETTERS[1:3], paste0("F", 1:5),
+               list(paste0("F", 1:5), LETTERS[1:3],
                as.character(1), as.character(1:2)))
-  expect_equal(as.vector(a[1,,1,1]), 1:5)
-  expect_equal(as.vector(a[1,,1,2]), 6:10)
-  expect_equal(as.vector(a[2,,1,1]), 11:15)
-  expect_equal(as.vector(a[2,,1,2]), 16:20)
-  expect_equal(as.vector(a[3,,1,1]), 21:25)
-  expect_equal(as.vector(a[3,,1,2]), 26:30)
+  expect_equal(as.vector(a[,1,1,1]), 1:5)
+  expect_equal(as.vector(a[,1,1,2]), 6:10)
+  expect_equal(as.vector(a[,2,1,1]), 11:15)
+  expect_equal(as.vector(a[,2,1,2]), 16:20)
+  expect_equal(as.vector(a[,3,1,1]), 21:25)
+  expect_equal(as.vector(a[,3,1,2]), 26:30)
 })
 
 test_that(".readFlexmapCsv works without replicates and dilutions", {
@@ -134,13 +132,13 @@ C;21;22;23;24;25
 
   a <- flexmap:::.readFlexmapCsv(textConnection(csv))
 
-  expect_equal(dim(a), c(3, 5, 1, 1))
+  expect_equal(dim(a), c(5, 3, 1, 1))
   expect_equal(dimnames(a),
-               list(LETTERS[1:3], paste0("F", 1:5),
+               list(paste0("F", 1:5), LETTERS[1:3],
                as.character(1), as.character(1)))
-  expect_equal(as.vector(a[1,,1,1]), 1:5)
-  expect_equal(as.vector(a[2,,1,1]), 11:15)
-  expect_equal(as.vector(a[3,,1,1]), 21:25)
+  expect_equal(as.vector(a[,1,1,1]), 1:5)
+  expect_equal(as.vector(a[,2,1,1]), 11:15)
+  expect_equal(as.vector(a[,3,1,1]), 21:25)
 })
 
 test_that(".readFlexmapCsv works w/o replicate column but with replicates", {
@@ -155,16 +153,16 @@ C;26;27;28;29;30
 
   a <- flexmap:::.readFlexmapCsv(textConnection(csv))
 
-  expect_equal(dim(a), c(3, 5, 1, 2))
+  expect_equal(dim(a), c(5, 3, 1, 2))
   expect_equal(dimnames(a),
-               list(LETTERS[1:3], paste0("F", 1:5),
+               list(paste0("F", 1:5), LETTERS[1:3],
                as.character(1), as.character(1:2)))
-  expect_equal(as.vector(a[1,,1,1]), 1:5)
-  expect_equal(as.vector(a[1,,1,2]), 6:10)
-  expect_equal(as.vector(a[2,,1,1]), 11:15)
-  expect_equal(as.vector(a[2,,1,2]), 16:20)
-  expect_equal(as.vector(a[3,,1,1]), 21:25)
-  expect_equal(as.vector(a[3,,1,2]), 26:30)
+  expect_equal(as.vector(a[,1,1,1]), 1:5)
+  expect_equal(as.vector(a[,1,1,2]), 6:10)
+  expect_equal(as.vector(a[,2,1,1]), 11:15)
+  expect_equal(as.vector(a[,2,1,2]), 16:20)
+  expect_equal(as.vector(a[,3,1,1]), 21:25)
+  expect_equal(as.vector(a[,3,1,2]), 26:30)
 })
 
 test_that(".readFlexmapCsv works w/o replicate column but with replicates and dilutions", {
@@ -191,16 +189,15 @@ C;1000;2600;2700;2800;2900;3000
 
   a <- flexmap:::.readFlexmapCsv(textConnection(csv))
 
-  expect_equal(dim(a), c(3, 5, 3, 2))
+  expect_equal(dim(a), c(5, 3, 3, 2))
   expect_equal(dimnames(a),
-               list(LETTERS[1:3], paste0("F", 1:5),
+               list(paste0("F", 1:5), LETTERS[1:3],
                as.character(10^(1:3)), as.character(1:2)))
-  expect_equal(as.vector(a[1,,1,1]), 1:5)
-  expect_equal(as.vector(a[1,,1,2]), 6:10)
-  expect_equal(as.vector(a[1,,2,1]), c(10, 20, 30, 40, 50))
-  expect_equal(as.vector(a[2,,1,1]), 11:15)
-  expect_equal(as.vector(a[2,,1,2]), 16:20)
-  expect_equal(as.vector(a[3,,1,1]), 21:25)
-  expect_equal(as.vector(a[3,,1,2]), 26:30)
+  expect_equal(as.vector(a[,1,1,1]), 1:5)
+  expect_equal(as.vector(a[,1,1,2]), 6:10)
+  expect_equal(as.vector(a[,1,2,1]), c(10, 20, 30, 40, 50))
+  expect_equal(as.vector(a[,2,1,1]), 11:15)
+  expect_equal(as.vector(a[,2,1,2]), 16:20)
+  expect_equal(as.vector(a[,3,1,1]), 21:25)
+  expect_equal(as.vector(a[,3,1,2]), 26:30)
 })
-

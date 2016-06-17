@@ -115,6 +115,47 @@ setMethod(FlexmapSet, "array",
               protocolData=protocolData, ...)
 })
 
+setMethod("[", "FlexmapSet",
+          function(x, i, j, k, l, ..., drop=FALSE) {
+  if (!isVersioned(x) || !isCurrent(x)["FlexmapSet"]) {
+    x <- updateObject(x)
+  }
+
+  if (!missing(i)) {
+    featureData(x) <- featureData(x)[i,, ..., drop=drop]
+  }
+
+  if (!missing(j)) {
+    phenoData(x) <- phenoData(x)[j,, ..., drop=drop]
+    protocolData(x) <- protocolData(x)[j,, ..., drop=drop]
+  }
+
+  if (!missing(k)) {
+    dilutionData(x) <- dilutionData(x)[k,, ..., drop=drop]
+  }
+
+  if (!missing(l)) {
+    replicateData(x) <- replicateData(x)[l,, ..., drop=drop]
+  }
+
+  orig <- assayData(x)
+  mode <- storageMode(x)
+  assayData(x) <-
+    switch(mode,
+           environment =,
+           lockedEnvironment = {
+             ad <- new.env(parent=emptyenv())
+             for (nm in ls(orig)) ad[[nm]] <- orig[[nm]][i, j, k, l, ..., drop=drop]
+             if (mode == "lockedEnvironment") lockEnvironment(ad, TRUE)
+             ad
+           },
+           list = {
+             lapply(orig, function(obj) obj[[nm]][i, j, k, l, ..., drop=drop])
+           })
+  validObject(x)
+  x
+})
+
 setMethod("dilutionData", "FlexmapSet", function(object) object@dilutionData)
 
 setReplaceMethod("dilutionData",

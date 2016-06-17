@@ -1,6 +1,6 @@
 setMethod("initialize", "FlexmapSet",
           function(.Object, assayData, phenoData, featureData, dilutionData,
-                   replicateData, exprs=new("array"), ... ) {
+                   replicateData, exprs=array(double(), dim=c(0,0,0,0)), ... ) {
   if (missing(assayData) && missing(exprs)) {
     stop("provide at most one of 'assayData' or 'exprs' to initialize FlexmapSet",
          call.=FALSE)
@@ -67,10 +67,62 @@ setValidity("FlexmapSet", function(object) {
   if (is.null(msg)) TRUE else msg
 })
 
+setMethod(FlexmapSet, "missing",
+  function(assayData,
+  phenoData=AnnotatedDataFrame(),
+  featureData=AnnotatedDataFrame(),
+  dilutionData=AnnotatedDataFrame(),
+  replicateData=AnnotatedDataFrame(),
+  experimentData=MIAME(),
+  annotation=character(),
+  protocolData=AnnotatedDataFrame(), ...) {
+  .FlexmapSet(assayData=assayDataNew(exprs=array(double(),dim=c(0,0,0,0))),
+              assayData, phenoData=phenoData, featureData=featureData,
+              dilutionData=dilutionData, replicateData=replicateData,
+              experimentData=experimentData, annotation=annotation,
+              protocolData=protocolData, ...)
+})
+
+setMethod(FlexmapSet, "environment",
+ function(assayData,
+           phenoData=annotatedDataFrameFrom(assayData, dimname="sample"),
+           featureData=annotatedDataFrameFrom(assayData, dimname="feature"),
+           dilutionData=annotatedDataFrameFrom(assayData, dimname="dilution"),
+           replicateData=annotatedDataFrameFrom(assayData, dimname="replicate"),
+           experimentData=MIAME(),
+           annotation=character(),
+           protocolData=annotatedDataFrameFrom(assayData, dimname="sample"),
+           ...) {
+  .FlexmapSet(assayData, phenoData=phenoData, featureData=featureData,
+              dilutionData=dilutionData, replicateData=replicateData,
+              experimentData=experimentData, annotation=annotation,
+              protocolData=protocolData, ...)
+})
+
+setMethod(FlexmapSet, "array",
+  function(assayData,
+           phenoData=annotatedDataFrameFrom(assayData, dimname="sample"),
+           featureData=annotatedDataFrameFrom(assayData, dimname="feature"),
+           dilutionData=annotatedDataFrameFrom(assayData, dimname="dilution"),
+           replicateData=annotatedDataFrameFrom(assayData, dimname="replicate"),
+           experimentData=MIAME(),
+           annotation=character(),
+           protocolData=annotatedDataFrameFrom(assayData, dimname="sample"),
+           ...) {
+  .FlexmapSet(exprs=assayData, phenoData=phenoData, featureData=featureData,
+              dilutionData=dilutionData, replicateData=replicateData,
+              experimentData=experimentData, annotation=annotation,
+              protocolData=protocolData, ...)
+})
+
 setMethod("dilutionData", "FlexmapSet", function(object) object@dilutionData)
 
 setMethod("dilutionNames", "FlexmapSet", function(object) {
-  dimnames(object)[[.dim["dilution"]]]
+  if (dim(object)[.dim["dilution"]]) {
+    dimnames(object)[[.dim["dilution"]]]
+  } else {
+    character(0L)
+  }
 })
 
 setMethod("dim", signature(x="FlexmapSet"),
@@ -110,7 +162,11 @@ setReplaceMethod("exprs", signature(object="FlexmapSet", value="array"),
 setMethod("replicateData", "FlexmapSet", function(object) object@replicateData)
 
 setMethod("replicateNames", "FlexmapSet", function(object) {
-  dimnames(object)[[.dim["replicate"]]]
+  if (dim(object)[.dim["replicate"]]) {
+    dimnames(object)[[.dim["replicate"]]]
+  } else {
+    character(0L)
+  }
 })
 
 setMethod("show", "FlexmapSet", function(object) {
@@ -122,11 +178,16 @@ setMethod("show", "FlexmapSet", function(object) {
     cat("assayData:", paste(adim, tolower(names(adim)), collapse=", "), "\n")
     cat("  element names:", paste(assayDataElementNames(object),
                                   collapse=", "), "\n")
-    cat(.showAnnotatedDataFrame(protocolData(object), "protocolData"), "\n")
-    cat(.showAnnotatedDataFrame(phenoData(object), "phenoData"), "\n")
-    cat(.showAnnotatedDataFrame(featureData(object), "featureData"), "\n")
-    cat(.showAnnotatedDataFrame(dilutionData(object), "dilutionData"), "\n")
-    cat(.showAnnotatedDataFrame(replicateData(object), "replicateData"), "\n")
+    cat(.showAnnotatedDataFrame(protocolData(object), "protocolData"),
+        sep="\n")
+    cat(.showAnnotatedDataFrame(phenoData(object), "phenoData"),
+        sep="\n")
+    cat(.showAnnotatedDataFrame(featureData(object), "featureData"),
+        sep="\n")
+    cat(.showAnnotatedDataFrame(dilutionData(object), "dilutionData"),
+        sep="\n")
+    cat(.showAnnotatedDataFrame(replicateData(object), "replicateData"),
+        sep="\n")
 
     cat("experimentData: use 'experimentData(object)'\n")
 

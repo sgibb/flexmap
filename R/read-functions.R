@@ -1,3 +1,68 @@
+#' Read FlexmapSet
+#' @param exprsFile character, file path to expression data in csv.
+#' @param phenoDataFile character, file path to phenotype data in csv.
+#' @param experimentDataFile character, file path to experiment data file in
+#' MIAME format.
+#' @param phenoDataArgs list, arguments to be passed to underlying functions.
+#' @param epxerimentDataArgs list, arguments to be passed to underlying
+#' functions.
+#' @param sep field separator character, see also
+#' \code{\link[utils]{read.table}}.
+#' @param \ldots further arguments passed to the constructor of FlexmapSet.
+#' @return \code{\linkS4class{FlexmapSet}}
+#' @export
+readFlexmapSet <- function(exprsFile, phenoDataFile, experimentDataFile,
+                           phenoDataArgs=list(sep=sep, ...),
+                           experimentDataArgs=list(...),
+                           notesFile,
+                           sep=";", ...) {
+  ## exprs
+  if (missing(exprsFile)) {
+    stop("Expression can not be missing!")
+  }
+  if (!file.exists(exprsFile)) {
+    stop("File ", sQuote(exprsFile), " doesn't exists!")
+  }
+
+  exprs <- .readFlexmapCsv(exprsFile, sep=sep)
+
+  if (!missing(phenoDataFile)) {
+    if (!file.exists(phenoDataFile)) {
+      stop("File ", sQuote(phenoDataFile), " doesn't exists!")
+    }
+    phenoDataArgs$file <- phenoDataFile
+    pd <- do.call(.readPhenoDataCsv, phenoDataArgs)
+
+    i <- match(dimnames(exprs)[[.dim["sample"]]], sampleNames(pd))
+
+    if (anyNA(i)) {
+      warning("The phenoData file contains some ID's ",
+              "that are not present in the expression file.")
+    }
+    pd <- pd[i,]
+  } else {
+    pd <- .annotatedDataFrameFromArray(exprs, "sample")
+  }
+
+  if (!missing(experimentDataFile)) {
+    experimentDataArgs$file <- experimentDataFile
+    if (!file.exists(experimentDataFile)) {
+      stop("File ", sQuote(experimentDataFile), " doesn't exists!")
+    }
+    ed <- do.call(read.MIAME, experimentDataArgs)
+  } else {
+    ed <- MIAME()
+  }
+
+  if (!missing(notesFile)) {
+    notes(ed) <- readLines(notesFile)
+  }
+
+  obj <- FlexmapSet(assayData=exprs, phenoData=pd, experimentData=ed)
+  validObject(obj)
+  obj
+}
+
 #' Read flexmap csv file format
 #'
 #' In general it is: Sample; (Replicate); (Dilution); Antigen1/Feature1; ...;

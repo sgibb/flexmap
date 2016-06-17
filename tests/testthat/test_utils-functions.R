@@ -34,3 +34,19 @@ test_that(".annotatedDataFrameFromArray", {
   expect_equal(rownames(r), paste0("D", 1:2))
   expect_equal(rownames(n), character())
 })
+
+test_that(".Dimnames", {
+  expect_equal(.Dimnames(),
+               c("Features", "Samples", "Dilutions", "Replicates"))
+})
+
+test_that(".showAnnotatedDataFrame", {
+  expect_error(.showAnnotatedDataFrame(data.frame()))
+
+  d <- AnnotatedDataFrame(data.frame(foo=1:10, bar=1:10))
+  expect_equal(.showAnnotatedDataFrame(d), capture.output(d)[-4])
+  expect_equal(.showAnnotatedDataFrame(d, "foodata"),
+               c("foodata", capture.output(d)[-c(1, 4)]))
+  expect_equal(.showAnnotatedDataFrame(AnnotatedDataFrame(), "foodata"),
+               "foodata: none")
+})

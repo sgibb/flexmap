@@ -20,3 +20,28 @@
 
   AnnotatedDataFrame(data=data, dimLabels=dimLabels)
 }
+
+#' create uppercase plural dimnames
+#' @return character
+#' @noRd
+.Dimnames <- function() {
+  dn <- .dimnames()
+  paste0(toupper(substr(dn, 1L, 1L)), substr(dn, 2L, nchar(dn)), "s")
+}
+
+#' modified output of show,AnnotatedDataFrame
+#' @param object AnnotatedDataFrame
+#' @param header character, headline instead of "An object of class ADF"
+#' @return character
+#' @noRd
+.showAnnotatedDataFrame <- function(object, header) {
+  stopifnot(is(object, "AnnotatedDataFrame"))
+
+  out <- capture.output(object)
+
+  if (!missing(header)) {
+    out <- gsub("An object of class 'AnnotatedDataFrame'", header, out)
+  }
+  out <- out[!grepl("varMetadata:", out)]
+  out
+}

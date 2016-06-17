@@ -2,3 +2,4 @@
 
 import(Biobase)
 import(methods)
+importFrom(utils,capture.output)

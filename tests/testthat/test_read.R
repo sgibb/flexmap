@@ -1,4 +1,4 @@
-context("read-functions")
+context("read")
 
 test_that(".readFlexmapCsv works with replicates and dilutions", {
 csv <- "Sample;Replicate;Dilution;F1;F2;F3;F4;F5

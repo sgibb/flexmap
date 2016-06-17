@@ -1,5 +1,5 @@
 #' @import methods
-#' @importFrom utils capture.output
+#' @importFrom utils capture.output read.table
 #' @import Biobase
 #'
 NULL

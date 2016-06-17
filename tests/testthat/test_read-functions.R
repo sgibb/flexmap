@@ -201,3 +201,29 @@ C;1000;2600;2700;2800;2900;3000
   expect_equal(as.vector(a[,3,1,1]), 21:25)
   expect_equal(as.vector(a[,3,1,2]), 26:30)
 })
+
+test_that(".readPhenoDataCsv", {
+csv <- "Sample;Class
+A;ClassA
+B;ClassA
+C;ClassB
+D;ClassB
+"
+
+  adf <- AnnotatedDataFrame(data.frame(Class=rep(c("ClassA", "ClassB"),
+                                                 each=2),
+                                       row.names=LETTERS[1:4],
+                                       stringsAsFactors=FALSE),
+                            dimLabels=c("sampleNames", "sampleColumns"))
+  expect_equal(.readPhenoDataCsv(textConnection(csv)), adf)
+})
+
+test_that(".readPhenoDataCsv throws an error if duplicated ids exists", {
+csv <- "Sample;Class
+A;ClassA
+A;ClassA
+C;ClassB
+"
+  expect_error(.readPhenoDataCsv(textConnection(csv)),
+               "PhenoData file has to have unique sample ids in the first column.")
+})

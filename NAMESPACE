@@ -3,3 +3,4 @@
 import(Biobase)
 import(methods)
 importFrom(utils,capture.output)
+importFrom(utils,read.table)

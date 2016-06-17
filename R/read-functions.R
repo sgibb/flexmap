@@ -2,16 +2,17 @@
 #'
 #' In general it is: Sample; (Replicate); (Dilution); Antigen1/Feature1; ...;
 #' FeatureN
-#' @param file file path
+#' @param file file path/connection
+#' @param sep field separator
 #' @return array, dimensions = features x samples x dilution x replicates
 #' (because eSet requires features x samples instead of samples x features)
 #' @noRd
-.readFlexmapCsv <- function(file) {
-  header <- scan(file, what=character(), sep=";", nlines=1L, quiet=TRUE)
+.readFlexmapCsv <- function(file, sep=";") {
+  header <- scan(file, what=character(), sep=sep, nlines=1L, quiet=TRUE)
   content <- scan(file, what=c(character(1L),
                                replicate(length(header) - 1L, double())),
                   skip=as.numeric(is.character(file)),
-                  sep=";", quiet=TRUE, multi.line=FALSE)
+                  sep=sep, quiet=TRUE, multi.line=FALSE)
 
   i <- match(.dimnames(), tolower(header), nomatch=0L)
   names(i) <- .dimnames()
@@ -54,4 +55,29 @@
   aperm(array(unlist(content[-i])[o],
               dim=c(sn, dn, rn, fn), dimnames=list(sl, dl, rl, fl)),
         perm=c(4L, 1L, 2L, 3L))
+}
+
+#' Read phenoData csv file
+#'
+#' Has to have a first column containing sample ids.
+#'
+#' @param file file path/connection
+#' @param header first line == header, see ?read.table
+#' @param sep field sep
+#' @param stringsAsFactors stringsAsFactors, replace default with FALSE
+#' @param ... furhter arguments to read.table
+#' @return AnnotatedDataFrame
+#' @noRd
+.readPhenoDataCsv <- function(file, header=TRUE, sep=";",
+                              stringsAsFactors=FALSE, ...) {
+  d <- read.table(file, header=header, sep=sep,
+                  stringsAsFactors=stringsAsFactors, ...)
+  id <- unique(d[[1L]])
+
+  if (length(id) != length(d[[1L]]) || !is.character(id)) {
+    stop("PhenoData file has to have unique sample ids in the first column.")
+  }
+
+  row.names(d) <- id
+  AnnotatedDataFrame(d[-1L], dimLabels=c("sampleNames", "sampleColumns"))
 }

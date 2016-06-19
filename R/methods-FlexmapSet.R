@@ -152,6 +152,7 @@ setMethod("[", "FlexmapSet",
            list = {
              lapply(orig, function(obj) obj[[nm]][i, j, k, l, ..., drop=drop])
            })
+  processData(x) <- paste("Subset", .pdim(exprs(x)))
   validObject(x)
   x
 })
@@ -226,6 +227,18 @@ setMethod("replicateNames", "FlexmapSet", function(object) {
   }
 })
 
+setMethod("processData", "FlexmapSet", function(object) object@processData)
+
+setReplaceMethod("processData", "FlexmapSet",
+                 function(object, value, append=TRUE) {
+  if (append) {
+    object@processData <- c(object@processData, value)
+  } else {
+    object@protocolData <- value
+  }
+  object
+})
+
 setMethod("show", "FlexmapSet", function(object) {
   cat(class(object), " (storageMode: ", storageMode(object), ")\n", sep="")
 
@@ -245,12 +258,8 @@ setMethod("show", "FlexmapSet", function(object) {
         sep="\n")
     cat(.showAnnotatedDataFrame(replicateData(object), "replicateData"),
         sep="\n")
-
     cat("experimentData: use 'experimentData(object)'\n")
 
-    pmids <- pubMedIds(object)
-    if (length(pmids) && all(nzchar(pmids))) {
-      cat("  pubMedIds:", paste(pmids, sep=", "), "\n")
-    }
+    .showProcessData(object)
   }
 })

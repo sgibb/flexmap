@@ -12,13 +12,22 @@
   }
 }
 
-.substractBackground <- function(object, id="Blank") {
-  exprs(object) <- sweep(exprs(object),
-                         .dim[c("feature", "dilution", "replicate")],
-                         exprs(object)[,id,,, drop=FALSE],
-                         "-")
-  processingData(object) <- paste("Substract background", .pdim(exprs(object)))
+.sweep <- function(object,
+                   MARGIN=.dim[c("feature", "dilution", "replicate")],
+                   STATS, FUN, processing="", ...) {
+  exprs(object) <- sweep(exprs(object), MARGIN=MARGIN, STATS=STATS,
+                         FUN=FUN, ...)
+  processingData(object) <- paste(processing, .pdim(exprs(object)))
   object
+}
+
+.substractBackground <- function(object, id="Blank") {
+  .sweep(object, STATS=exprs(object)[,id,,, drop=FALSE], FUN="-",
+         processing="Substract background")
+}
+
+.normalise <- function(object, antitag) {
+  .sweep(object, STATS=antitag, FUN="/", processing="Normalise")
 }
 
 .filterBackground <- function(object, id="Blank") {
@@ -28,6 +37,16 @@
   object <- object[,-id,,]
   processingData(object) <- paste("Filter background", .pdim(exprs(object)))
   object
+}
+
+.calcSD <- function(object, na.rm=TRUE) {
+  sqrt(apply(exprs(object), .dim[c("feature", "sample", "dilution")], var,
+             na.rm=na.rm))
+}
+
+.calcCV <- function(object, na.rm=TRUE) {
+  .calcSD(object, na.rm=na.rm) /
+    rowMeans(exprs(object), dims=.dim["replicate"] - 1L, na.rm=TRUE)
 }
 
 .averageReplicates <- function(object, method="mean") {
@@ -44,18 +63,3 @@
   validObject(object)
   object
 }
-
-.normalise <- function(object, antitag) {
-  stopifnot(dim(exprs(object))[.dim["feature"]] == length(antitag))
-  exprs(object) <- exprs(object)/antitag
-  processingData(object) <- paste("Normalise", .pdim(exprs(object)))
-  object
-}
-
-#aggregateArray <- function(object, ...) {
-#  sweep(exprs(object), .dim[c("sample", "feature", "dilution")],
-#        mean, na.rm=TRUE)
-#}
-
-## technical replicates
-#rowSums(exprs(object), dims=3)

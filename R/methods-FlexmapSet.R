@@ -227,7 +227,8 @@ setMethod("replicateNames", "FlexmapSet", function(object) {
   }
 })
 
-setMethod("processingData", "FlexmapSet", function(object) object@processingData)
+setMethod("processingData", "FlexmapSet",
+          function(object) object@processingData)
 
 setReplaceMethod("processingData", "FlexmapSet",
                  function(object, value, append=TRUE) {

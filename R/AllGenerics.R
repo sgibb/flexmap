@@ -6,8 +6,8 @@ setGeneric("replicateData", function(object) standardGeneric("replicateData"))
 setGeneric("replicateData<-", function(object, value)
            standardGeneric("replicateData<-"))
 setGeneric("replicateNames", function(object) standardGeneric("replicateNames"))
-setGeneric("processData", function(object) standardGeneric("processData"))
-setGeneric("processData<-", function(object, value, ...) standardGeneric("processData<-"))
+setGeneric("processingData", function(object) standardGeneric("processingData"))
+setGeneric("processingData<-", function(object, value, ...) standardGeneric("processingData<-"))
 
 setGeneric("FlexmapSet",
   function(assayData,

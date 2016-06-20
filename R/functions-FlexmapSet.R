@@ -1,14 +1,14 @@
-.showProcessData <- function(object) {
-  pd <- processData(object)
+.showProcessingData <- function(object) {
+  pd <- processingData(object)
   n <- length(pd)
 
   if (n) {
     if (n > 5L) {
       pd <- c(pd[1L], "...", pd[(n-3L):n])
     }
-    cat("processData:", paste0("  ", pd), sep="\n")
+    cat("processingData:", paste0("  ", pd), sep="\n")
   } else {
-    cat("processData: none\n")
+    cat("processingData: none\n")
   }
 }
 
@@ -17,7 +17,7 @@
                          .dim[c("feature", "dilution", "replicate")],
                          exprs(object)[,id,,, drop=FALSE],
                          "-")
-  processData(object) <- paste("Substract background", .pdim(exprs(object)))
+  processingData(object) <- paste("Substract background", .pdim(exprs(object)))
   object
 }
 
@@ -26,7 +26,7 @@
     id <- match(id, sampleNames(object))
   }
   object <- object[,-id,,]
-  processData(object) <- paste("Filter background", .pdim(exprs(object)))
+  processingData(object) <- paste("Filter background", .pdim(exprs(object)))
   object
 }
 
@@ -39,7 +39,7 @@
   dimnames(ex) <- dimnames(object)
   exprs(object) <- ex
 
-  processData(object) <- paste0("Average replicates (method='", method,
+  processingData(object) <- paste0("Average replicates (method='", method,
                                 "') ", .pdim(exprs(object)))
   validObject(object)
   object
@@ -48,7 +48,7 @@
 .normalise <- function(object, antitag) {
   stopifnot(dim(exprs(object))[.dim["feature"]] == length(antitag))
   exprs(object) <- exprs(object)/antitag
-  processData(object) <- paste("Normalise", .pdim(exprs(object)))
+  processingData(object) <- paste("Normalise", .pdim(exprs(object)))
   object
 }
 

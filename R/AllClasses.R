@@ -1,7 +1,7 @@
 .FlexmapSet <- setClass("FlexmapSet",
                         slots=list(dilutionData="AnnotatedDataFrame",
                                    replicateData="AnnotatedDataFrame",
-                                   processData="character"),
+                                   processingData="character"),
                         contains="eSet",
                         prototype=prototype(
                           new("VersionedBiobase",

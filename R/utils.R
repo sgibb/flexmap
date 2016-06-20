@@ -17,6 +17,7 @@
 #' print/catable dims
 #' @param x array
 #' @return character
+#' @noRd
 .pdim <- function(x) {
   paste0("[", paste0(dim(x), collapse=","), "]")
 }

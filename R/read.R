@@ -59,7 +59,7 @@ readFlexmapSet <- function(exprsFile, phenoDataFile, experimentDataFile,
   }
 
   obj <- FlexmapSet(assayData=exprs, phenoData=pd, experimentData=ed,
-                    processData=paste("Read FLEXMAP data", .pdim(exprs)))
+                    processingData=paste("Read FLEXMAP data", .pdim(exprs)))
   validObject(obj)
   obj
 }
